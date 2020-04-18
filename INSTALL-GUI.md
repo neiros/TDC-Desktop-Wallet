@@ -14,12 +14,12 @@ sudo apt-get install build-essential git autoconf libtool libssl-dev libboost-al
 
 - Clone this repository:
 ```
-git clone https://github.com/neiros/TDC.git tdc
+git clone --recursive https://github.com/prism-lab/TDC-Desktop-Wallet.git
 ```
 
 - Build the source code:
 ```
-cd tdc
+cd TDC-Desktop-Wallet
 qmake TDC-qt.pro USE_UPNP=-
 make
 ```
