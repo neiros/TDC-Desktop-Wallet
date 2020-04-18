@@ -2,12 +2,14 @@ TEMPLATE = app
 TARGET = TDC-qt
 macx:TARGET = "TDC-Qt"
 VERSION = 0.8.2
-INCLUDEPATH += src src/json src/qt
+INCLUDEPATH += tdc/src src src/json src/qt
 QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 DEFINES += BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 CONFIG += no_include_pwd
 CONFIG += thread
+
+
 
 # for boost 1.37, add -mt to the boost libraries
 # use: qmake BOOST_LIB_SUFFIX=-mt
@@ -99,30 +101,30 @@ contains(BITCOIN_NEED_QT_PLUGINS, 1) {
     QTPLUGIN += qcncodecs qjpcodecs qtwcodecs qkrcodecs qtaccessiblewidgets
 }
 
-INCLUDEPATH += src/leveldb/include src/leveldb/helpers
-LIBS += $$PWD/src/leveldb/libleveldb.a $$PWD/src/leveldb/libmemenv.a
+INCLUDEPATH += tdc/src/leveldb/include tdc/src/leveldb/helpers
+LIBS += $$PWD/tdc/src/leveldb/libleveldb.a $$PWD/tdc/src/leveldb/libmemenv.a
 !win32 {
     # we use QMAKE_CXXFLAGS_RELEASE even without RELEASE=1 because we use RELEASE to indicate linking preferences not -O preferences
-    genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a
+    genleveldb.commands = cd $$PWD/tdc/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a
 } else {
     # make an educated guess about what the ranlib command is called
     isEmpty(QMAKE_RANLIB) {
         QMAKE_RANLIB = $$replace(QMAKE_STRIP, strip, ranlib)
     }
     LIBS += -lshlwapi
-    genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
+    genleveldb.commands = cd $$PWD/tdc/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
 }
-genleveldb.target = $$PWD/src/leveldb/libleveldb.a
+genleveldb.target = $$PWD/tdc/src/leveldb/libleveldb.a
 genleveldb.depends = FORCE
-PRE_TARGETDEPS += $$PWD/src/leveldb/libleveldb.a
+PRE_TARGETDEPS += $$PWD/tdc/src/leveldb/libleveldb.a
 QMAKE_EXTRA_TARGETS += genleveldb
 # Gross ugly hack that depends on qmake internals, unfortunately there is no other way to do it.
-QMAKE_CLEAN += $$PWD/src/leveldb/libleveldb.a; cd $$PWD/src/leveldb ; $(MAKE) clean
+QMAKE_CLEAN += $$PWD/tdc/src/leveldb/libleveldb.a; cd $$PWD/tdc/src/leveldb ; $(MAKE) clean
 
 # regenerate src/build.h
 !win32|contains(USE_BUILD_INFO, 1) {
     genbuild.depends = FORCE
-    genbuild.commands = cd $$PWD; /bin/sh share/genbuild.sh $$OUT_PWD/build/build.h
+    genbuild.commands = cd $$PWD; /bin/sh tdc/share/genbuild.sh $$OUT_PWD/build/build.h
     genbuild.target = $$OUT_PWD/build/build.h
     PRE_TARGETDEPS += $$OUT_PWD/build/build.h
     QMAKE_EXTRA_TARGETS += genbuild
@@ -143,39 +145,39 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/aboutdialog.h \
     src/qt/editaddressdialog.h \
     src/qt/bitcoinaddressvalidator.h \
-    src/alert.h \
-    src/addrman.h \
-    src/base58.h \
-    src/bignum.h \
-    src/chainparams.h \
-    src/checkpoints.h \
-    src/compat.h \
-    src/sync.h \
-    src/util.h \
-    src/hash.h \
-    src/uint256.h \
-    src/serialize.h \
-    src/core.h \
-    src/main.h \
-    src/miner.h \
-    src/net.h \
-    src/key.h \
-    src/db.h \
-    src/walletdb.h \
-    src/script.h \
-    src/init.h \
-    src/bloom.h \
-    src/mruset.h \
-    src/checkqueue.h \
-    src/json/json_spirit_writer_template.h \
-    src/json/json_spirit_writer.h \
-    src/json/json_spirit_value.h \
-    src/json/json_spirit_utils.h \
-    src/json/json_spirit_stream_reader.h \
-    src/json/json_spirit_reader_template.h \
-    src/json/json_spirit_reader.h \
-    src/json/json_spirit_error_position.h \
-    src/json/json_spirit.h \
+    tdc/src/alert.h \
+    tdc/src/addrman.h \
+    tdc/src/base58.h \
+    tdc/src/bignum.h \
+    tdc/src/chainparams.h \
+    tdc/src/checkpoints.h \
+    tdc/src/compat.h \
+    tdc/src/sync.h \
+    tdc/src/util.h \
+    tdc/src/hash.h \
+    tdc/src/uint256.h \
+    tdc/src/serialize.h \
+    tdc/src/core.h \
+    tdc/src/main.h \
+    tdc/src/miner.h \
+    tdc/src/net.h \
+    tdc/src/key.h \
+    tdc/src/db.h \
+    tdc/src/walletdb.h \
+    tdc/src/script.h \
+    tdc/src/init.h \
+    tdc/src/bloom.h \
+    tdc/src/mruset.h \
+    tdc/src/checkqueue.h \
+    tdc/src/json/json_spirit_writer_template.h \
+    tdc/src/json/json_spirit_writer.h \
+    tdc/src/json/json_spirit_value.h \
+    tdc/src/json/json_spirit_utils.h \
+    tdc/src/json/json_spirit_stream_reader.h \
+    tdc/src/json/json_spirit_reader_template.h \
+    tdc/src/json/json_spirit_reader.h \
+    tdc/src/json/json_spirit_error_position.h \
+    tdc/src/json/json_spirit.h \
     src/qt/clientmodel.h \
     src/qt/guiutil.h \
     src/qt/transactionrecord.h \
@@ -185,48 +187,48 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/transactiondesc.h \
     src/qt/transactiondescdialog.h \
     src/qt/bitcoinamountfield.h \
-    src/wallet.h \
-    src/keystore.h \
+    tdc/src/wallet.h \
+    tdc/src/keystore.h \
     src/qt/transactionfilterproxy.h \
     src/qt/transactionview.h \
     src/qt/walletmodel.h \
     src/qt/walletview.h \
     src/qt/walletstack.h \
     src/qt/walletframe.h \
-    src/bitcoinrpc.h \
+    tdc/src/bitcoinrpc.h \
     src/qt/overviewpage.h \
     src/qt/csvmodelwriter.h \
-    src/crypter.h \
+    tdc/src/crypter.h \
     src/qt/sendcoinsentry.h \
     src/qt/qvalidatedlineedit.h \
     src/qt/bitcoinunits.h \
     src/qt/qvaluecombobox.h \
     src/qt/askpassphrasedialog.h \
-    src/protocol.h \
+    tdc/src/protocol.h \
     src/qt/notificator.h \
     src/qt/paymentserver.h \
-    src/allocators.h \
-    src/ui_interface.h \
+    tdc/src/allocators.h \
+    tdc/src/ui_interface.h \
     src/qt/rpcconsole.h \
-    src/version.h \
-    src/netbase.h \
-    src/clientversion.h \
-    src/txdb.h \
-    src/leveldb.h \
-    src/threadsafety.h \
-    src/limitedmap.h \
+    tdc/src/version.h \
+    tdc/src/netbase.h \
+    tdc/src/clientversion.h \
+    tdc/src/txdb.h \
+    tdc/src/leveldb.h \
+    tdc/src/threadsafety.h \
+    tdc/src/limitedmap.h \
     src/qt/splashscreen.h \
     src/qt/intro.h \
-    src/Lyra2RE/Lyra2.h \
-    src/Lyra2RE/Lyra2RE.h \
-    src/Lyra2RE/Sponge.h \
-    src/Lyra2RE/sph_blake.h \
-    src/Lyra2RE/sph_groestl.h \
-    src/Lyra2RE/sph_keccak.h \
-    src/Lyra2RE/sph_skein.h \
-    src/Lyra2RE/sph_types.h \
-    src/Lyra2RE/sph_cubehash.h \
-    src/Lyra2RE/sph_bmw.h
+    tdc/src/Lyra2RE/Lyra2.h \
+    tdc/src/Lyra2RE/Lyra2RE.h \
+    tdc/src/Lyra2RE/Sponge.h \
+    tdc/src/Lyra2RE/sph_blake.h \
+    tdc/src/Lyra2RE/sph_groestl.h \
+    tdc/src/Lyra2RE/sph_keccak.h \
+    tdc/src/Lyra2RE/sph_skein.h \
+    tdc/src/Lyra2RE/sph_types.h \
+    tdc/src/Lyra2RE/sph_cubehash.h \
+    tdc/src/Lyra2RE/sph_bmw.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -240,25 +242,25 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/aboutdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
-    src/alert.cpp \
-    src/chainparams.cpp \
-    src/version.cpp \
-    src/sync.cpp \
-    src/util.cpp \
-    src/hash.cpp \
-    src/netbase.cpp \
-    src/key.cpp \
-    src/script.cpp \
-    src/core.cpp \
-    src/main.cpp \
-    src/init.cpp \
-    src/miner.cpp \
-    src/net.cpp \
-    src/bloom.cpp \
-    src/checkpoints.cpp \
-    src/addrman.cpp \
-    src/db.cpp \
-    src/walletdb.cpp \
+    tdc/src/alert.cpp \
+    tdc/src/chainparams.cpp \
+    tdc/src/version.cpp \
+    tdc/src/sync.cpp \
+    tdc/src/util.cpp \
+    tdc/src/hash.cpp \
+    tdc/src/netbase.cpp \
+    tdc/src/key.cpp \
+    tdc/src/script.cpp \
+    tdc/src/core.cpp \
+    tdc/src/main.cpp \
+    tdc/src/init.cpp \
+    tdc/src/miner.cpp \
+    tdc/src/net.cpp \
+    tdc/src/bloom.cpp \
+    tdc/src/checkpoints.cpp \
+    tdc/src/addrman.cpp \
+    tdc/src/db.cpp \
+    tdc/src/walletdb.cpp \
     src/qt/clientmodel.cpp \
     src/qt/guiutil.cpp \
     src/qt/transactionrecord.cpp \
@@ -268,47 +270,47 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/transactiondescdialog.cpp \
     src/qt/bitcoinstrings.cpp \
     src/qt/bitcoinamountfield.cpp \
-    src/wallet.cpp \
-    src/keystore.cpp \
+    tdc/src/wallet.cpp \
+    tdc/src/keystore.cpp \
     src/qt/transactionfilterproxy.cpp \
     src/qt/transactionview.cpp \
     src/qt/walletmodel.cpp \
     src/qt/walletview.cpp \
     src/qt/walletstack.cpp \
     src/qt/walletframe.cpp \
-    src/bitcoinrpc.cpp \
-    src/rpcdump.cpp \
-    src/rpcnet.cpp \
-    src/rpcmining.cpp \
-    src/rpcwallet.cpp \
-    src/rpcblockchain.cpp \
-    src/rpcrawtransaction.cpp \
+    tdc/src/bitcoinrpc.cpp \
+    tdc/src/rpcdump.cpp \
+    tdc/src/rpcnet.cpp \
+    tdc/src/rpcmining.cpp \
+    tdc/src/rpcwallet.cpp \
+    tdc/src/rpcblockchain.cpp \
+    tdc/src/rpcrawtransaction.cpp \
     src/qt/overviewpage.cpp \
     src/qt/csvmodelwriter.cpp \
-    src/crypter.cpp \
+    tdc/src/crypter.cpp \
     src/qt/sendcoinsentry.cpp \
     src/qt/qvalidatedlineedit.cpp \
     src/qt/bitcoinunits.cpp \
     src/qt/qvaluecombobox.cpp \
     src/qt/askpassphrasedialog.cpp \
-    src/protocol.cpp \
+    tdc/src/protocol.cpp \
     src/qt/notificator.cpp \
     src/qt/paymentserver.cpp \
     src/qt/rpcconsole.cpp \
-    src/noui.cpp \
-    src/leveldb.cpp \
-    src/txdb.cpp \
+    tdc/src/noui.cpp \
+    tdc/src/leveldb.cpp \
+    tdc/src/txdb.cpp \
     src/qt/splashscreen.cpp \
     src/qt/intro.cpp \
-    src/Lyra2RE/Lyra2.c \
-    src/Lyra2RE/Lyra2RE.c \
-    src/Lyra2RE/Sponge.c \
-    src/Lyra2RE/blake.c \
-    src/Lyra2RE/skein.c \
-    src/Lyra2RE/groestl.c \
-    src/Lyra2RE/keccak.c \
-    src/Lyra2RE/cubehash.c \
-    src/Lyra2RE/bmw.c
+    tdc/src/Lyra2RE/Lyra2.c \
+    tdc/src/Lyra2RE/Lyra2RE.c \
+    tdc/src/Lyra2RE/Sponge.c \
+    tdc/src/Lyra2RE/blake.c \
+    tdc/src/Lyra2RE/skein.c \
+    tdc/src/Lyra2RE/groestl.c \
+    tdc/src/Lyra2RE/keccak.c \
+    tdc/src/Lyra2RE/cubehash.c \
+    tdc/src/Lyra2RE/bmw.c
 
 RESOURCES += src/qt/bitcoin.qrc
 
