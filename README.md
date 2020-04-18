@@ -20,18 +20,9 @@ sudo apt-get install build-essential git autoconf libtool libssl-dev libboost-al
 git clone --recursive https://github.com/prism-lab/TDC-Desktop-Wallet.git
 ```
 
-- Fix permissions:
-```
-cd TDC-Desktop-Wallet/tdc/src/leveldb && chmod +x build_detect_platform
-```
-
-- Return to project folder:
-```
-cd .. && cd .. && cd ..
-```
-
 - Build the source code:
 ```
+cd TDC-Desktop-Wallet
 qmake TDC-qt.pro USE_UPNP=-
 make
 ```
