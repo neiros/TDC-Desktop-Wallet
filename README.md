@@ -17,7 +17,7 @@ sudo apt-get install build-essential git autoconf libtool libssl-dev libboost-al
 
 - Clone this repository:
 ```
-git clone --recursive https://github.com/prism-lab/TDC-Desktop-Wallet.git
+git clone --recursive https://github.com/neiros/TDC-Desktop-Wallet.git
 ```
 
 - Build the source code:
